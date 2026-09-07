@@ -2,9 +2,9 @@
 type: ADR
 title: Static typed application architecture
 description: Use React, TypeScript, Vite, local browser persistence, and GitHub Pages.
-status: Accepted
+status: Superseded
 supersedes:
-superseded_by:
+superseded_by: 0002
 tags: [frontend, deployment]
 timestamp: 2026-08-31T00:00:00Z
 ---

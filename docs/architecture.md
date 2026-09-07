@@ -76,7 +76,7 @@ Every in-progress state change is saved under the versioned attempt storage key.
 
 ## Deployment
 
-Vite builds the static site with `/gcp-de-quizzes/` as its base path. After every push to `main`, `.github/workflows/pages.yml` installs the browser test runtime, runs `make test` and `make verify-sources`, uploads `dist/` only if both gates pass, and deploys the artifact to the `github-pages` environment.
+Vite builds the static site with `/gcp-de-exam-simulator/` as its base path. After every push to `main`, `.github/workflows/pages.yml` installs the browser test runtime, runs `make test` and `make verify-sources`, uploads `dist/` only if both gates pass, and deploys the artifact to the `github-pages` environment.
 
 ## Drift Control
 

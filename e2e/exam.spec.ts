@@ -13,7 +13,7 @@ test("does not overflow the configured viewport", async ({ page }) => {
 });
 
 test("completes and reviews a marked practice attempt", async ({ page }) => {
-  await page.goto("http://127.0.0.1:4174/gcp-de-quizzes/e2e/harness.html");
+  await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.getByRole("radio", { name: /Correct$/ }).check();
   await page.getByRole("button", { name: "Mark for review" }).click();
@@ -30,7 +30,7 @@ test("completes and reviews a marked practice attempt", async ({ page }) => {
 });
 
 test("restores the current question after reload", async ({ page }) => {
-  await page.goto("http://127.0.0.1:4174/gcp-de-quizzes/e2e/harness.html");
+  await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.getByRole("radio", { name: /Correct$/ }).check();
   await page.getByRole("button", { name: "Next" }).click();
@@ -44,21 +44,21 @@ test("restores the current question after reload", async ({ page }) => {
 });
 
 test("places current-question controls before the question navigator in keyboard order", async ({ page }) => {
-  await page.goto("http://127.0.0.1:4174/gcp-de-quizzes/e2e/harness.html");
+  await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Mark for review" })).toBeFocused();
 });
 
 test("keeps attempt controls within the configured viewport", async ({ page }) => {
-  await page.goto("http://127.0.0.1:4174/gcp-de-quizzes/e2e/harness.html");
+  await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
   await page.getByRole("button", { name: "Start practice exam" }).click();
   const fitsViewport = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
   expect(fitsViewport).toBe(true);
 });
 
 test("supports keyboard cancellation of submission", async ({ page }) => {
-  await page.goto("http://127.0.0.1:4174/gcp-de-quizzes/e2e/harness.html");
+  await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.getByRole("button", { name: "Finish exam" }).click();
   await expect(page.getByRole("button", { name: "Keep working" })).toBeFocused();
