@@ -5,6 +5,7 @@ import {
   practiceV3Sections,
   practiceV4Sections,
   practiceV5Sections,
+  practiceV6Sections,
 } from "./sections";
 
 export const practiceV1Draft: DraftQuestionSet = {
@@ -52,10 +53,20 @@ export const practiceV5Draft: DraftQuestionSet = {
   sections: practiceV5Sections,
 };
 
+export const practiceV6Draft: DraftQuestionSet = {
+  id: "professional-data-engineer-v4.2-practice-1-v6",
+  version: 6,
+  title: "Professional Data Engineer Practice Exam 1",
+  guideVersion: "4.2",
+  durationMinutes: 120,
+  sections: practiceV6Sections,
+};
+
 export const draftQuestionSets: readonly DraftQuestionSet[] = [
   practiceV1Draft,
   practiceV2Draft,
   practiceV3Draft,
   practiceV4Draft,
   practiceV5Draft,
+  practiceV6Draft,
 ];

@@ -32,5 +32,5 @@ Deliver focused foundation, exam-section content, authoring workflow, and deploy
 
 - The simulator foundation, authoring workflow, and GitHub Pages deployment are complete.
 - The active `design`, `ingest`, `store`, `analyze`, and `operate` sections contribute the required 11, 12, 10, 8, and 9 questions, respectively.
-- A post-activation quality audit rejected 11 questions in immutable version 1. Independent reviews rejected corrected versions 2 through 4 and retained their content-bound reports.
-- Independent reviewer `independent-semantic-reviewer-v5-20260908` accepted all 50 questions in `professional-data-engineer-v4.2-practice-1-v5` version 5 after evaluating its 87 unique Google-owned evidence URLs. The accepted record binds the candidate SHA-256 digest and enables activation.
+- A post-activation quality audit rejected 11 questions in immutable version 1. Independent reviews rejected corrected versions 2 through 4, and a final audit reversed the initial acceptance of version 5 after finding one unsupported question.
+- Independent reviewer `opencode-gpt-5.6-sol-v6-independent-review-20260908` accepted all 50 questions in `professional-data-engineer-v4.2-practice-1-v6` version 6 after evaluating its 89 unique Google-owned evidence URLs. The accepted record and production test bind the candidate SHA-256 digest and enable activation without permitting unnoticed content drift.

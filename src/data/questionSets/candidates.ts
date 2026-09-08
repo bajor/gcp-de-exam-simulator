@@ -7,6 +7,7 @@ const candidateQuestionSetIds: readonly string[] = [
   "professional-data-engineer-v4.2-practice-1-v3",
   "professional-data-engineer-v4.2-practice-1-v4",
   "professional-data-engineer-v4.2-practice-1-v5",
+  "professional-data-engineer-v4.2-practice-1-v6",
 ];
 export const candidateQuestionSets = assembleCandidateQuestionSets(
   draftQuestionSets,
