@@ -1,9 +1,9 @@
 import { expect, test } from "@playwright/test";
 
-test("shows the evidence-review gate before activation", async ({ page }) => {
+test("shows the accepted practice exam", async ({ page }) => {
   await page.goto("./");
   await expect(page.getByRole("heading", { name: "Documentation-backed practice exam" })).toBeVisible();
-  await expect(page.getByRole("status")).toContainText("being authored");
+  await expect(page.getByRole("button", { name: "Start practice exam" })).toBeVisible();
 });
 
 test("does not overflow the configured viewport", async ({ page }) => {

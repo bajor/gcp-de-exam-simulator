@@ -2,7 +2,7 @@
 
 A documentation-backed exam simulator for the Google Cloud Professional Data Engineer certification.
 
-The simulator application is implemented, and 23 of 50 questions are registered in the first draft. The question set remains unavailable until all 50 questions pass source verification and independent semantic review.
+The simulator includes one 50-question practice exam mapped to Professional Data Engineer exam guide v4.2. Every question has passed structural validation, live source verification, and independent semantic review.
 
 ## Local Development
 

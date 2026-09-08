@@ -4,7 +4,7 @@ import {
 import { candidateQuestionSets } from "./candidates";
 
 export { candidateQuestionSets } from "./candidates";
-const activeQuestionSetId: string | undefined = undefined;
+const activeQuestionSetId = "professional-data-engineer-v4.2-practice-1";
 const reviewDocuments = import.meta.glob("/docs/reviews/*.md", {
   query: "?raw",
   import: "default",
