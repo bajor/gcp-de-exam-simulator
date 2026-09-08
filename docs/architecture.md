@@ -11,7 +11,7 @@ timestamp: 2026-08-31T00:00:00Z
 
 ## Target Context
 
-The browser loads a static React application from GitHub Pages. The application imports immutable TypeScript question sets, stores the current or completed attempt in browser `localStorage`, and opens cited Google Cloud documentation in external pages. There is no application server or user account. The active registry contains the first 50-question set, activated only after it passed [the documented activation gate](/bdr/0003-content-bound-question-activation.md).
+The browser loads a static React application from GitHub Pages. The application imports immutable TypeScript question sets, stores the current or completed attempt in browser `localStorage`, and opens cited Google Cloud documentation in external pages. There is no application server or user account. The active registry contains version 5 of the first 50-question set, activated only after it passed [the documented activation gate](/bdr/0003-content-bound-question-activation.md).
 
 ## Module Ownership
 

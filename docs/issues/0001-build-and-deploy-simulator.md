@@ -31,7 +31,6 @@ Deliver focused foundation, exam-section content, authoring workflow, and deploy
 ### Progress
 
 - The simulator foundation, authoring workflow, and GitHub Pages deployment are complete.
-- The `design` section contributes 11 structurally valid, source-verified questions authored by `gpt-5.6-sol-design-20260901` and accepted in independent section review by `reviewer-design-20260901-c`.
-- The `ingest` section contributes 12 structurally valid, source-verified questions authored by `gpt-5.6-sol-ingest-20260901` and accepted in independent section review by `reviewer-ingest-20260901-a`.
-- The `store`, `analyze`, and `operate` sections contribute their required 10, 8, and 9 questions, respectively.
-- Independent reviewer `reviewer-v42-practice-1-20260908` accepted all 50 questions in `professional-data-engineer-v4.2-practice-1` version 1 after re-fetching its 84 unique Google-owned evidence URLs. The accepted record binds the candidate SHA-256 digest and enables activation.
+- The active `design`, `ingest`, `store`, `analyze`, and `operate` sections contribute the required 11, 12, 10, 8, and 9 questions, respectively.
+- A post-activation quality audit rejected 11 questions in immutable version 1. Independent reviews rejected corrected versions 2 through 4 and retained their content-bound reports.
+- Independent reviewer `independent-semantic-reviewer-v5-20260908` accepted all 50 questions in `professional-data-engineer-v4.2-practice-1-v5` version 5 after evaluating its 87 unique Google-owned evidence URLs. The accepted record binds the candidate SHA-256 digest and enables activation.
