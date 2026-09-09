@@ -68,7 +68,7 @@ it("rejects activation provenance containing rejected questions", () => {
     ...validReview(set),
     rejectedQuestions: [{ id: set.questions[0].id, reason: "Ambiguous constraint" }],
   };
-  expect(validateReviewRecord(set, invalid)).toContain("A review with rejected questions cannot activate a set.");
+  expect(validateReviewRecord(set, invalid)).toContain("An acceptance record cannot contain rejected questions.");
 });
 
 it("rejects an impossible calendar verification date", () => {

@@ -6,7 +6,7 @@ export default defineConfig({
     include: [
       "scripts/verify-sources.test.ts",
       "scripts/create-review-record.integration.test.ts",
-      "src/data/questionSets/activation.integration.test.ts",
+      "src/data/questionSets/catalog.integration.test.ts",
     ],
     testTimeout: 120_000,
   },

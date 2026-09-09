@@ -2,8 +2,8 @@
 type: PRD
 title: Documentation-backed exam simulator
 description: A timed and recoverable 50-question simulator with cited answer review.
-status: Accepted
-superseded_by:
+status: Superseded
+superseded_by: 0002
 tags: [exam, practice]
 timestamp: 2026-08-31T00:00:00Z
 ---

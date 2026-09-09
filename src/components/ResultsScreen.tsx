@@ -6,10 +6,11 @@ interface ResultsScreenProps {
   readonly questionSet: QuestionSet;
   readonly attempt: CompletedAttempt;
   readonly score: Score;
+  readonly onChooseExam: () => void;
   readonly onRestart: () => void;
 }
 
-export function ResultsScreen({ questionSet, attempt, score, onRestart }: ResultsScreenProps) {
+export function ResultsScreen({ questionSet, attempt, score, onChooseExam, onRestart }: ResultsScreenProps) {
   const headingRef = useRef<HTMLHeadingElement>(null);
 
   useEffect(() => {
@@ -23,7 +24,10 @@ export function ResultsScreen({ questionSet, attempt, score, onRestart }: Result
         <h1 ref={headingRef} tabIndex={-1}>{score.percentage.toFixed(1)}%</h1>
         <p>{score.correct} of {score.total} questions correct</p>
         <p className="disclaimer">Practice percentage only. Google does not publish a passing score.</p>
-        <button className="primary-button" onClick={onRestart}>Start a new attempt</button>
+        <div className="result-actions">
+          <button className="primary-button" onClick={onRestart}>Start a new attempt</button>
+          <button className="secondary-button secondary-button-dark" onClick={onChooseExam}>Choose another exam</button>
+        </div>
       </header>
 
       <section className="section-results" aria-labelledby="section-heading">

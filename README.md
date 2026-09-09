@@ -2,7 +2,7 @@
 
 A documentation-backed exam simulator for the Google Cloud Professional Data Engineer certification.
 
-The simulator includes one 50-question practice exam mapped to Professional Data Engineer exam guide v4.2. Every question has passed structural validation, live source verification, and independent semantic review.
+The simulator includes one available 50-question practice exam mapped to Professional Data Engineer exam guide v4.2 and a visible placeholder for the upcoming second set. Every available question has passed structural validation, live source verification, and independent semantic review.
 
 ## Local Development
 
@@ -19,15 +19,15 @@ Run the complete documentation, type, lint, unit, build, and browser-test gate w
 make test
 ```
 
-Question-bank changes must also run `make verify-sources`. The command structurally validates every registered draft section and candidate set, then fetches every unique evidence URL before activation.
+Question-bank changes must also run `make verify-sources`. The command structurally validates every registered draft section and candidate set, verifies indexed audit records against immutable candidates, and fetches every unique evidence URL before publication.
 
 ## Question Authoring
 
-The project-local [`gcp-pde-question-authoring`](.opencode/skills/gcp-pde-question-authoring/SKILL.md) skill defines the mandatory original-content, Google-source, typed-section, and author-handoff workflow. Complete sections are registered under `src/data/questionSets/sections/`; partial sections cannot enter the candidate or active registries. A separate session uses [`gcp-pde-question-review`](.opencode/skills/gcp-pde-question-review/SKILL.md) to perform final independent review and generate the content-bound acceptance record.
+The project-local [`gcp-pde-question-authoring`](.opencode/skills/gcp-pde-question-authoring/SKILL.md) skill defines the mandatory original-content, Google-source, typed-section, and author-handoff workflow. Complete sections are registered under `src/data/questionSets/sections/`; partial sections cannot enter the candidate registry or runtime catalog. A separate session uses [`gcp-pde-question-review`](.opencode/skills/gcp-pde-question-review/SKILL.md) to perform final independent review and generate a content-bound audit record.
 
 ## Deployment
 
-Merges to `main` build and deploy the independently accepted active exam to [GitHub Pages](https://bajor.github.io/gcp-de-exam-simulator/).
+Merges to `main` automatically build and deploy the exam catalog to [GitHub Pages](https://bajor.github.io/gcp-de-exam-simulator/).
 
 ## Documentation
 
