@@ -27,7 +27,7 @@ The project-local [`gcp-pde-question-authoring`](.opencode/skills/gcp-pde-questi
 
 ## Deployment
 
-Merges to `main` build and deploy the static site to [GitHub Pages](https://bajor.github.io/gcp-de-exam-simulator/). Until the first set is independently accepted, the deployed page displays the review gate rather than an exam.
+Merges to `main` build and deploy the independently accepted active exam to [GitHub Pages](https://bajor.github.io/gcp-de-exam-simulator/).
 
 ## Documentation
 
