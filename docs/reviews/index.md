@@ -1,6 +1,6 @@
 # Independent Reviews
 
-Each active question set has one independently authored acceptance document containing the versioned, SHA-256-bound machine record consumed by activation. Rejected reviews are retained as separately dated documents listing every rejected question identifier and reason.
+Every real question set receives an independently authored semantic audit. Accepted and rejected documents contain versioned, SHA-256-bound machine records validated against immutable registered candidates by CI; they are audit history rather than runtime application inputs.
 
 - [Professional Data Engineer Practice Exam 1 version 1](/reviews/professional-data-engineer-v4.2-practice-1.md) - Original acceptance record for immutable candidate `professional-data-engineer-v4.2-practice-1` version 1.
 - [Practice Exam 1 quality audit rejection](/reviews/professional-data-engineer-v4.2-practice-1-rejected-2026-09-08.md) - Post-activation audit rejected 11 questions in immutable candidate version 1.

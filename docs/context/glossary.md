@@ -36,7 +36,7 @@ The explanation attached to one answer choice. It states why that choice does or
 
 ## Candidate question set
 
-A complete question set listed for pre-activation checks. Structural validation and live source verification run against candidate question sets; only a candidate with an accepted independent review record can enter the active registry.
+A complete question set listed for structural, source, and independent semantic checks before it can enter the runtime catalog.
 
 ## Draft question set
 
@@ -49,6 +49,10 @@ Conflict of Interest. A source relationship that could influence a claim; projec
 ## Exam guide
 
 Google's official Professional Data Engineer certification exam guide. Question coverage uses version 4.2 until a later version is explicitly researched and adopted.
+
+## Exam catalog
+
+The compiled list of practice-exam entries shown to the candidate. An available entry contains one complete question set; a coming-soon entry contains metadata but cannot contain questions or create an attempt.
 
 ## Multiple-select
 
@@ -64,11 +68,11 @@ Product Requirements Document. An append-only specification of the user problem,
 
 ## Question bank
 
-All question sets present in the repository, including sets that are not yet active.
+All question sets present in the repository, including candidates that are not available in the runtime catalog.
 
 ## Question set
 
-An immutable, versioned collection of exactly 50 original practice questions with a declared exam-guide version. One active question set is offered by the application.
+An immutable, versioned collection of exactly 50 original practice questions with a declared exam-guide version. The exam catalog can offer multiple available question sets.
 
 ## Question section
 
@@ -76,11 +80,11 @@ All questions assigned to one exam-guide section within a draft question set. A 
 
 ## Rejection record
 
-The machine-readable JSON block in an indexed rejected review report. It binds rejected question identifiers and concrete reasons to all 50 reviewed identifiers, the exact candidate version and SHA-256 content digest, reviewer, authors, review date, and source-check result.
+The machine-readable JSON block in an indexed rejected review report. It binds rejected question identifiers and concrete reasons to all 50 reviewed identifiers, the exact candidate version and SHA-256 content digest, reviewer, authors, review date, and source-check result. Rejection records are immutable content-audit history, not runtime application inputs.
 
 ## Review record
 
-The independently authored document under `docs/reviews/` that accepts a question set for activation. Its JSON record identifies the exact question-set version and SHA-256 content digest, reviewer, distinct authors, review date, successful source-check command, unique source count, and every accepted question identifier.
+The independently authored document under `docs/reviews/` that records a successful semantic audit. Its JSON record identifies the exact question-set version and SHA-256 content digest, reviewer, distinct authors, review date, successful source-check command, unique source count, and every accepted question identifier. Review records remain CI-verifiable audit artifacts but are not runtime application inputs.
 
 ## Source evidence
 

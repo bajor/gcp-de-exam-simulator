@@ -36,7 +36,7 @@ If any question fails, generate a machine-readable rejection record from the exa
 npm run create-rejection-record -- <question-set-id> <reviewer-id> <YYYY-MM-DD> '[{"id":"<question-id>","reason":"<concrete reason>"}]'
 ```
 
-Create `docs/reviews/<question-set-id>-rejected-<YYYY-MM-DD>.md` with `type: Review`, `status: Rejected`, the reviewer and author identifiers, commands run, and a concise rejection summary. Add the complete unmodified command output under the exact `## Rejection Record` heading in a `json` fence. The generated JSON is the single authoritative list of rejected IDs and reasons; do not duplicate that list elsewhere in the report. Index the rejection report in `docs/reviews/index.md`, then run `make docs`, `make test`, and `make verify-sources`. All three commands must pass after the report exists. Do not add a `## Review Record` block, activate the rejected candidate, remove its candidate registration, or edit rejected content. A separate author must create a corrected draft and candidate with a new unique question-set ID; the corrected candidate then requires a new independent review session.
+Create `docs/reviews/<question-set-id>-rejected-<YYYY-MM-DD>.md` with `type: Review`, `status: Rejected`, the reviewer and author identifiers, commands run, and a concise rejection summary. Add the complete unmodified command output under the exact `## Rejection Record` heading in a `json` fence. The generated JSON is the single authoritative list of rejected IDs and reasons; do not duplicate that list elsewhere in the report. Index the rejection report in `docs/reviews/index.md`, then run `make docs`, `make test`, and `make verify-sources`. All three commands must pass after the report exists. Do not add a `## Review Record` block, publish the rejected candidate in the runtime catalog, remove its candidate registration, or edit rejected content. A separate author must create a corrected draft and candidate with a new unique question-set ID; the corrected candidate then requires a new independent review session.
 
 ## Review Record
 
@@ -82,5 +82,5 @@ Replace the abbreviated JSON example with the complete unmodified command output
 - Any rejected IDs and reasons were recorded in an indexed rejection report rather than an accepted record.
 - Every rejection report contains a generated `## Rejection Record` that passes machine validation.
 - The generated record matches the exact candidate version and SHA-256 digest.
-- The review document is typed, indexed, and accepted by activation tests.
+- The review document is typed, indexed, and bound to its registered immutable candidate by CI.
 - All repository and source-verification gates pass after the review is added.

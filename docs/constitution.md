@@ -41,10 +41,10 @@ Invalid question states must be rejected by TypeScript types and question-bank v
 - Every correct answer and distractor explanation is supported by current Google-owned documentation.
 - Every question records the date on which its sources were verified.
 - Ambiguous, deprecated, preview-dependent, or unsupported questions are rejected.
-- A separate reviewer re-fetches the evidence before a question set is activated.
+- A separate reviewer re-fetches the evidence before a question set enters the runtime catalog.
 - The application never presents a practice percentage as Google's unpublished passing score.
 - The deployed application remains usable on current desktop and mobile browsers.
 
 ## Amendment Log
 
-No amendments.
+- 2026-09-09: Replaced singleton activation terminology with runtime-catalog publication while retaining mandatory independent evidence review.

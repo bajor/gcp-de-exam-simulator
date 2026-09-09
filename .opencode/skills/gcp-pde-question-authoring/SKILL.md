@@ -75,7 +75,7 @@ export const designSection = {
 } satisfies QuestionSection<"design">;
 ```
 
-Register the export in `src/data/questionSets/sections/index.ts`. Do not add a partial set to `candidateQuestionSets`, set `activeQuestionSetId`, or author the independent review record.
+Register the export in `src/data/questionSets/sections/index.ts`. Do not add a partial set to `candidateQuestionSets` or the runtime exam catalog, or author the independent review record.
 
 ## Verification
 
@@ -90,7 +90,7 @@ Both commands must pass. `make verify-sources` structurally validates every regi
 
 ## Reviewer Handoff
 
-Provide section reviewers with the section name, author identifier, question IDs, objective mappings, unique source URLs, and source-verification result. Section review may identify corrections, but it does not produce the final acceptance artifact. After all five sections assemble into one candidate, a separate session must use the `gcp-pde-question-review` skill to re-fetch every source, evaluate all 50 questions, and create `docs/reviews/<set-id>.md`. The author must not accept their own questions or create that record.
+Provide section reviewers with the section name, author identifier, question IDs, objective mappings, unique source URLs, and source-verification result. Section review may identify corrections, but it does not produce the final audit artifact. After all five sections assemble into one candidate, a separate session must use the `gcp-pde-question-review` skill to re-fetch every source, evaluate all 50 questions, and create `docs/reviews/<set-id>.md`. The author must not review their own questions or create that record.
 
 If final independent review rejects a candidate, keep that candidate and its draft registered unchanged so the rejection record remains verifiable. Make corrections under a new unique draft and candidate ID, reusing unchanged section modules where possible. Never overwrite or remove content bound to an indexed rejection report.
 

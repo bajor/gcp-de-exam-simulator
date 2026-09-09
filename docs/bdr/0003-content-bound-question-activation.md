@@ -2,9 +2,9 @@
 type: BDR
 title: Content-bound question validation and activation
 description: Observable section authoring, source verification, independent review, content binding, and activation behavior.
-status: Accepted
+status: Superseded
 supersedes: 0002
-superseded_by:
+superseded_by: 0004
 tags: [questions, sources]
 timestamp: 2026-08-31T00:00:00Z
 ---
