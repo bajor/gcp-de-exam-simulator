@@ -32,11 +32,11 @@ Before editing content, identify:
 - For `multiple`, state "Choose two" in the prompt and set `requiredSelections: 2`.
 - Make distractors plausible but wrong for one documented reason. Do not use joke answers, vague wording, or overlapping choices.
 - Keep product names and terminology current with the fetched documentation.
-- Use stable IDs in the form `pde-v42-<section>-NN` for questions and short question-local IDs for evidence.
+- Use stable IDs in the form `pde-v42-p<practice-number>-<section>-NN` for new practice exams and short question-local IDs for evidence. The existing Practice Exam 1 IDs retain their legacy `pde-v42-<section>-NN` form.
 
 ## Typed Template
 
-Create or update `src/data/questionSets/sections/<section>.ts` and export one typed section:
+Create or update `src/data/questionSets/practice<practice-number>/sections/<section>.ts` and export one typed section:
 
 ```ts
 import type { QuestionSection } from "../../../domain/questions";

@@ -1,7 +1,6 @@
 import { expect, it } from "vitest";
-import { draftQuestionSets } from "../src/data/questionSets/drafts";
-import { candidateQuestionSets } from "../src/data/questionSets/candidates";
 import { examCatalog } from "../src/data/questionSets";
+import { candidateQuestionSets, draftQuestionSets } from "../src/data/questionSets/registry";
 import {
   parseRejectionRecord,
   parseReviewRecord,

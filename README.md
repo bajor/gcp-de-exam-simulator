@@ -23,7 +23,7 @@ Question-bank changes must also run `make verify-sources`. The command structura
 
 ## Question Authoring
 
-The project-local [`gcp-pde-question-authoring`](.opencode/skills/gcp-pde-question-authoring/SKILL.md) skill defines the mandatory original-content, Google-source, typed-section, and author-handoff workflow. Complete sections are registered under `src/data/questionSets/sections/`; partial sections cannot enter the candidate registry or runtime catalog. A separate session uses [`gcp-pde-question-review`](.opencode/skills/gcp-pde-question-review/SKILL.md) to perform final independent review and generate a content-bound audit record.
+The project-local [`gcp-pde-question-authoring`](.opencode/skills/gcp-pde-question-authoring/SKILL.md) skill defines the mandatory original-content, Google-source, typed-section, and author-handoff workflow. New exams use isolated modules under `src/data/questionSets/practice<number>/`; partial sections cannot enter the candidate registry or runtime catalog. A separate session uses [`gcp-pde-question-review`](.opencode/skills/gcp-pde-question-review/SKILL.md) to perform final independent review and generate a content-bound audit record.
 
 ## Deployment
 

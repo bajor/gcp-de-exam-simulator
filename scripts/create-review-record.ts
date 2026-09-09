@@ -1,4 +1,4 @@
-import { candidateQuestionSets } from "../src/data/questionSets/candidates";
+import { candidateQuestionSets } from "../src/data/questionSets/registry";
 import { createReviewRecord } from "../src/domain/questions";
 
 const [questionSetId, reviewer, reviewedOn] = process.argv.slice(2);

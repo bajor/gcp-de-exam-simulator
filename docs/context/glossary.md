@@ -90,6 +90,10 @@ The independently authored document under `docs/reviews/` that records a success
 
 A Google-owned documentation URL, document title, and supported claim used to justify choice feedback. Each question's `verifiedOn` date is the authoritative date on which all evidence attached to that question was re-fetched and checked.
 
+## Set-specific question registry
+
+The section, draft, and candidate modules owned by one practice exam. Aggregate verification registries combine these modules without changing another accepted exam's composition files.
+
 ## UI
 
 User Interface. The visible and interactive controls through which a candidate takes and reviews an attempt.

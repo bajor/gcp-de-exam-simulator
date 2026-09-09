@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("selects the available practice exam from the catalog", async ({ page }) => {
   await page.goto("./");
   await expect(page.getByRole("heading", { name: "Choose your practice exam." })).toBeVisible();
-  await expect(page.getByText("Coming soon")).toBeVisible();
+  await expect(page.getByText("Available")).toHaveCount(2);
   await page.getByRole("button", { name: "Open Practice Exam 1" }).click();
   await expect(page.getByRole("heading", { name: "Documentation-backed practice exam" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Start practice exam" })).toBeVisible();

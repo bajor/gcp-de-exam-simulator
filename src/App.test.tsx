@@ -13,15 +13,17 @@ import { fixtureCatalog, fixtureQuestionSet } from "./test/fixtures";
 
 beforeEach(() => localStorage.clear());
 
-it("shows the upcoming second practice exam", () => {
+it("shows the second practice exam as available", () => {
   render(<App />);
   expect(screen.getByRole("heading", { name: "Professional Data Engineer Practice Exam 2" })).toBeVisible();
-  expect(screen.getByText("Coming soon")).toBeVisible();
+  expect(screen.getAllByText("Available")).toHaveLength(2);
 });
 
-it("does not offer a start action for the upcoming exam", () => {
+it("opens the second practice exam", async () => {
+  const user = userEvent.setup();
   render(<App />);
-  expect(screen.queryByRole("button", { name: "Open Practice Exam 2" })).not.toBeInTheDocument();
+  await user.click(screen.getByRole("button", { name: "Open Practice Exam 2" }));
+  expect(screen.getByRole("button", { name: "Start practice exam" })).toBeVisible();
 });
 
 it("starts an available practice exam", async () => {
