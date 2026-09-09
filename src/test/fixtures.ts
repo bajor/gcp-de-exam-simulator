@@ -4,6 +4,7 @@ import {
   type QuestionSet,
   type SingleChoiceQuestion,
 } from "../domain/questions";
+import type { ExamCatalogEntry } from "../domain/catalog";
 
 const evidence: Evidence = {
   id: "source",
@@ -56,3 +57,7 @@ export const fixtureQuestionSet: QuestionSet = {
   authors: ["author"],
   questions: [singleQuestion, multipleQuestion],
 };
+
+export const fixtureCatalog = [
+  { availability: "available", questionSet: fixtureQuestionSet },
+] satisfies readonly ExamCatalogEntry[];

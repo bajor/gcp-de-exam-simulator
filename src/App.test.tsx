@@ -1,29 +1,58 @@
-import { render, screen } from "@testing-library/react";
+import { fireEvent, render, screen } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { beforeEach, expect, it } from "vitest";
 import { App } from "./App";
-import { answerQuestion, completeAttempt, createAttempt, saveAttempt } from "./domain/attempt";
-import { fixtureQuestionSet } from "./test/fixtures";
+import {
+  answerQuestion,
+  attemptStorageKey,
+  completeAttempt,
+  createAttempt,
+  saveAttempt,
+} from "./domain/attempt";
+import { fixtureCatalog, fixtureQuestionSet } from "./test/fixtures";
 
 beforeEach(() => localStorage.clear());
 
+it("shows the upcoming second practice exam", () => {
+  render(<App />);
+  expect(screen.getByRole("heading", { name: "Professional Data Engineer Practice Exam 2" })).toBeVisible();
+  expect(screen.getByText("Coming soon")).toBeVisible();
+});
+
+it("does not offer a start action for the upcoming exam", () => {
+  render(<App />);
+  expect(screen.queryByRole("button", { name: "Open Practice Exam 2" })).not.toBeInTheDocument();
+});
+
 it("starts an available practice exam", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   expect(screen.getByRole("heading", { name: "Which fixture answer is correct?" })).toBeVisible();
 });
 
+it("returns to the catalog before an attempt starts", async () => {
+  const user = userEvent.setup();
+  renderFixtureApp();
+  await user.click(screen.getByRole("button", { name: "Choose another exam" }));
+  expect(screen.getByRole("heading", { name: "Choose your practice exam." })).toHaveFocus();
+});
+
+it("focuses the selected exam heading", () => {
+  renderFixtureApp();
+  expect(screen.getByRole("heading", { name: "Documentation-backed practice exam" })).toHaveFocus();
+});
+
 it("focuses the first question heading after start", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   expect(screen.getByRole("heading", { name: "Which fixture answer is correct?" })).toHaveFocus();
 });
 
 it("focuses a newly navigated question heading", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   await user.click(screen.getByRole("button", { name: "Next" }));
   expect(screen.getByRole("heading", { name: "Which two fixture answers are correct?" })).toHaveFocus();
@@ -31,7 +60,7 @@ it("focuses a newly navigated question heading", async () => {
 
 it("displays the exact score after submission", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   await user.click(screen.getByRole("radio", { name: /Correct$/ }));
   await user.click(screen.getByRole("button", { name: "Finish exam" }));
@@ -42,19 +71,25 @@ it("displays the exact score after submission", async () => {
 it("labels the candidate's selected answer in results", () => {
   const answered = answerQuestion(createAttempt(fixtureQuestionSet), fixtureQuestionSet.questions[0], "a");
   saveAttempt(completeAttempt(answered));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getByText(/Your answer/)).toBeVisible();
 });
 
 it("labels correct answers in results", () => {
   saveAttempt(completeAttempt(createAttempt(fixtureQuestionSet)));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getAllByText("Correct answer")).not.toHaveLength(0);
+});
+
+it("omits the removed result-review controls", () => {
+  saveAttempt(completeAttempt(createAttempt(fixtureQuestionSet)));
+  renderFixtureApp();
+  expect(screen.queryByText(/Priority|Wrong answers only/i)).not.toBeInTheDocument();
 });
 
 it("links result evidence to its cited source", () => {
   saveAttempt(completeAttempt(createAttempt(fixtureQuestionSet)));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getAllByRole("link", { name: "Google Cloud documentation" })[0]).toHaveAttribute(
     "href",
     "https://docs.cloud.google.com/docs",
@@ -64,38 +99,46 @@ it("links result evidence to its cited source", () => {
 it("restores the saved question position", () => {
   const attempt = { ...createAttempt(fixtureQuestionSet), currentQuestionIndex: 1 };
   saveAttempt(attempt);
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getByRole("heading", { name: "Which two fixture answers are correct?" })).toBeVisible();
 });
 
 it("discards malformed browser storage", () => {
-  localStorage.setItem("pde-practice-attempt-v1", "not-json");
-  render(<App questionSet={fixtureQuestionSet} />);
+  localStorage.setItem(attemptStorageKey(fixtureQuestionSet), "not-json");
+  renderFixtureApp();
   expect(screen.getByRole("button", { name: "Start practice exam" })).toBeVisible();
 });
 
 it("completes a restored expired attempt", () => {
   saveAttempt(createAttempt(fixtureQuestionSet, 0));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getByRole("heading", { name: "0.0%" })).toBeVisible();
 });
 
 it("restores a completed result", () => {
   const answered = answerQuestion(createAttempt(fixtureQuestionSet), fixtureQuestionSet.questions[0], "a");
   saveAttempt(completeAttempt(answered));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getByText("1 of 2 questions correct")).toBeVisible();
+});
+
+it("returns to the catalog from a completed result", async () => {
+  const user = userEvent.setup();
+  saveAttempt(completeAttempt(createAttempt(fixtureQuestionSet)));
+  renderFixtureApp();
+  await user.click(screen.getByRole("button", { name: "Choose another exam" }));
+  expect(screen.getByRole("heading", { name: "Choose your practice exam." })).toHaveFocus();
 });
 
 it("focuses the score heading when results appear", () => {
   saveAttempt(completeAttempt(createAttempt(fixtureQuestionSet)));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   expect(screen.getByRole("heading", { name: "0.0%" })).toHaveFocus();
 });
 
 it("disables additional choices at the multiple-select limit", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   await user.click(screen.getByRole("button", { name: "Next" }));
   await user.click(screen.getByRole("checkbox", { name: /Correct A/ }));
@@ -105,7 +148,7 @@ it("disables additional choices at the multiple-select limit", async () => {
 
 it("reports the unanswered count before submission", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   await user.click(screen.getByRole("button", { name: "Mark for review" }));
   await user.click(screen.getByRole("button", { name: "Finish exam" }));
@@ -114,7 +157,7 @@ it("reports the unanswered count before submission", async () => {
 
 it("reports the marked count before submission", async () => {
   const user = userEvent.setup();
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start practice exam" }));
   await user.click(screen.getByRole("button", { name: "Mark for review" }));
   await user.click(screen.getByRole("button", { name: "Finish exam" }));
@@ -124,7 +167,12 @@ it("reports the marked count before submission", async () => {
 it("confirms before replacing a completed result", async () => {
   const user = userEvent.setup();
   saveAttempt(completeAttempt(createAttempt(fixtureQuestionSet)));
-  render(<App questionSet={fixtureQuestionSet} />);
+  renderFixtureApp();
   await user.click(screen.getByRole("button", { name: "Start a new attempt" }));
   expect(screen.getByRole("dialog", { name: "Replace this result?" })).toBeVisible();
 });
+
+function renderFixtureApp() {
+  render(<App catalog={fixtureCatalog} />);
+  fireEvent.click(screen.getByRole("button", { name: "Open Practice Exam 1" }));
+}

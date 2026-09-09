@@ -1,17 +1,18 @@
-import {
-  activateQuestionSet,
-} from "../../domain/questions";
+import type { ExamCatalogEntry } from "../../domain/catalog";
 import { candidateQuestionSets } from "./candidates";
 
 export { candidateQuestionSets } from "./candidates";
-const activeQuestionSetId = "professional-data-engineer-v4.2-practice-1-v6";
-const reviewDocuments = import.meta.glob("/docs/reviews/*.md", {
-  query: "?raw",
-  import: "default",
-  eager: true,
-}) as Record<string, string>;
 
-const activeQuestionSetCandidate = candidateQuestionSets.find((questionSet) => questionSet.id === activeQuestionSetId);
-export const activeQuestionSet = activeQuestionSetCandidate
-  ? activateQuestionSet(activeQuestionSetCandidate, reviewDocuments[`/docs/reviews/${activeQuestionSetCandidate.id}.md`])
-  : undefined;
+const practiceExamOne = candidateQuestionSets.find(
+  (questionSet) => questionSet.id === "professional-data-engineer-v4.2-practice-1-v6",
+);
+if (!practiceExamOne) throw new Error("Practice Exam 1 is missing from the candidate registry.");
+
+export const examCatalog = [
+  { availability: "available", questionSet: practiceExamOne },
+  {
+    availability: "coming-soon",
+    id: "professional-data-engineer-v4.2-practice-2",
+    title: "Professional Data Engineer Practice Exam 2",
+  },
+] satisfies readonly ExamCatalogEntry[];

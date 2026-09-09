@@ -1,7 +1,10 @@
 import { expect, test } from "@playwright/test";
 
-test("shows the accepted practice exam", async ({ page }) => {
+test("selects the available practice exam from the catalog", async ({ page }) => {
   await page.goto("./");
+  await expect(page.getByRole("heading", { name: "Choose your practice exam." })).toBeVisible();
+  await expect(page.getByText("Coming soon")).toBeVisible();
+  await page.getByRole("button", { name: "Open Practice Exam 1" }).click();
   await expect(page.getByRole("heading", { name: "Documentation-backed practice exam" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Start practice exam" })).toBeVisible();
 });
@@ -14,6 +17,7 @@ test("does not overflow the configured viewport", async ({ page }) => {
 
 test("completes and reviews a marked practice attempt", async ({ page }) => {
   await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
+  await openFixtureExam(page);
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.getByRole("radio", { name: /Correct$/ }).check();
   await page.getByRole("button", { name: "Mark for review" }).click();
@@ -31,13 +35,14 @@ test("completes and reviews a marked practice attempt", async ({ page }) => {
 
 test("restores the current question after reload", async ({ page }) => {
   await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
+  await openFixtureExam(page);
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.getByRole("radio", { name: /Correct$/ }).check();
   await page.getByRole("button", { name: "Next" }).click();
-  const originalDeadline = await page.evaluate(() => JSON.parse(localStorage.getItem("pde-practice-attempt-v1")!).deadline);
+  const originalDeadline = await page.evaluate(() => JSON.parse(localStorage.getItem("pde-practice-attempt:fixture-set:v1")!).deadline);
   await page.reload();
   await expect(page.getByRole("heading", { name: "Which two fixture answers are correct?" })).toBeVisible();
-  const restoredDeadline = await page.evaluate(() => JSON.parse(localStorage.getItem("pde-practice-attempt-v1")!).deadline);
+  const restoredDeadline = await page.evaluate(() => JSON.parse(localStorage.getItem("pde-practice-attempt:fixture-set:v1")!).deadline);
   expect(restoredDeadline).toBe(originalDeadline);
   await page.getByRole("button", { name: "Question 1, answered" }).click();
   await expect(page.getByRole("radio", { name: /Correct$/ })).toBeChecked();
@@ -45,6 +50,7 @@ test("restores the current question after reload", async ({ page }) => {
 
 test("places current-question controls before the question navigator in keyboard order", async ({ page }) => {
   await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
+  await openFixtureExam(page);
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.keyboard.press("Tab");
   await expect(page.getByRole("button", { name: "Mark for review" })).toBeFocused();
@@ -52,6 +58,7 @@ test("places current-question controls before the question navigator in keyboard
 
 test("keeps attempt controls within the configured viewport", async ({ page }) => {
   await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
+  await openFixtureExam(page);
   await page.getByRole("button", { name: "Start practice exam" }).click();
   const fitsViewport = await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth);
   expect(fitsViewport).toBe(true);
@@ -59,6 +66,7 @@ test("keeps attempt controls within the configured viewport", async ({ page }) =
 
 test("supports keyboard cancellation of submission", async ({ page }) => {
   await page.goto("http://127.0.0.1:4174/gcp-de-exam-simulator/e2e/harness.html");
+  await openFixtureExam(page);
   await page.getByRole("button", { name: "Start practice exam" }).click();
   await page.getByRole("button", { name: "Finish exam" }).click();
   await expect(page.getByRole("button", { name: "Keep working" })).toBeFocused();
@@ -66,3 +74,7 @@ test("supports keyboard cancellation of submission", async ({ page }) => {
   await expect(page.getByRole("dialog")).toBeHidden();
   await expect(page.getByRole("button", { name: "Finish exam" })).toBeFocused();
 });
+
+async function openFixtureExam(page: import("@playwright/test").Page) {
+  await page.getByRole("button", { name: "Open Practice Exam 1" }).click();
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { ConfirmDialog } from "./components/ConfirmDialog";
+import { CatalogScreen } from "./components/CatalogScreen";
 import { ExamScreen } from "./components/ExamScreen";
 import { ResultsScreen } from "./components/ResultsScreen";
 import { StartScreen } from "./components/StartScreen";
@@ -14,25 +15,45 @@ import {
   type Attempt,
   type InProgressAttempt,
 } from "./domain/attempt";
+import type { ExamCatalogEntry } from "./domain/catalog";
 import type { ChoiceId, QuestionSet } from "./domain/questions";
-import { activeQuestionSet } from "./data/questionSets";
+import { examCatalog } from "./data/questionSets";
 
 interface AppProps {
-  readonly questionSet?: QuestionSet;
+  readonly catalog?: readonly ExamCatalogEntry[];
 }
 
-export function App({ questionSet = activeQuestionSet }: AppProps) {
-  const [attempt, setAttempt] = useState<Attempt | null>(() =>
-    questionSet ? restore(questionSet) : null,
-  );
+const selectedSetStorageKey = "pde-practice-selected-set-v1";
+
+export function App({ catalog = examCatalog }: AppProps) {
+  const [initialSelection] = useState(() => restoreSelection(catalog));
+  const [questionSet, setQuestionSet] = useState<QuestionSet | null>(initialSelection?.questionSet ?? null);
+  const [attempt, setAttempt] = useState<Attempt | null>(initialSelection?.attempt ?? null);
   const [confirmingRestart, setConfirmingRestart] = useState(false);
 
   useEffect(() => {
     if (attempt) saveAttempt(attempt);
   }, [attempt]);
 
-  if (!questionSet) return <StartScreen onStart={() => undefined} />;
-  if (!attempt) return <StartScreen questionSet={questionSet} onStart={() => setAttempt(createAttempt(questionSet))} />;
+  if (!questionSet) {
+    return <CatalogScreen entries={catalog} onSelect={(selected) => {
+      rememberSelection(selected);
+      setQuestionSet(selected);
+      setAttempt(restore(selected));
+    }} />;
+  }
+  if (!attempt) {
+    return (
+      <StartScreen
+        questionSet={questionSet}
+        onBack={() => {
+          forgetSelection();
+          setQuestionSet(null);
+        }}
+        onStart={() => setAttempt(createAttempt(questionSet))}
+      />
+    );
+  }
 
   if (attempt.status === "completed") {
     return (
@@ -41,6 +62,11 @@ export function App({ questionSet = activeQuestionSet }: AppProps) {
           questionSet={questionSet}
           attempt={attempt}
           score={scoreAttempt(questionSet, attempt.answers)}
+          onChooseExam={() => {
+            forgetSelection();
+            setQuestionSet(null);
+            setAttempt(null);
+          }}
           onRestart={() => setConfirmingRestart(true)}
         />
         {confirmingRestart && (
@@ -50,7 +76,7 @@ export function App({ questionSet = activeQuestionSet }: AppProps) {
             confirmLabel="Start new attempt"
             onCancel={() => setConfirmingRestart(false)}
             onConfirm={() => {
-              clearAttempt();
+              clearAttempt(questionSet);
               setConfirmingRestart(false);
               setAttempt(createAttempt(questionSet));
             }}
@@ -93,4 +119,33 @@ function restore(questionSet: QuestionSet): Attempt | null {
   return restored?.status === "in-progress" && restored.deadline <= Date.now()
     ? completeAttempt(restored, restored.deadline)
     : restored;
+}
+
+function restoreSelection(catalog: readonly ExamCatalogEntry[]) {
+  try {
+    const selectedId = localStorage.getItem(selectedSetStorageKey);
+    const entry = catalog.find((candidate) =>
+      candidate.availability === "available" && candidate.questionSet.id === selectedId
+    );
+    if (!entry || entry.availability !== "available") return null;
+    return { questionSet: entry.questionSet, attempt: restore(entry.questionSet) };
+  } catch {
+    return null;
+  }
+}
+
+function rememberSelection(questionSet: QuestionSet) {
+  try {
+    localStorage.setItem(selectedSetStorageKey, questionSet.id);
+  } catch {
+    // Selection remains usable in memory when browser storage is unavailable.
+  }
+}
+
+function forgetSelection() {
+  try {
+    localStorage.removeItem(selectedSetStorageKey);
+  } catch {
+    // Storage may be blocked by browser policy.
+  }
 }

@@ -4,6 +4,7 @@ import {
   answerQuestion,
   attemptStorageKey,
   createAttempt,
+  legacyAttemptStorageKey,
   loadAttempt,
   scoreAttempt,
 } from "./attempt";
@@ -76,6 +77,16 @@ describe("answer selection", () => {
 });
 
 describe("attempt persistence", () => {
+  it("uses a distinct key for each question set", () => {
+    const otherSet = { ...fixtureQuestionSet, id: "other-set" };
+    expect(attemptStorageKey(otherSet)).not.toBe(attemptStorageKey(fixtureQuestionSet));
+  });
+
+  it("uses a distinct key for each question set version", () => {
+    const nextVersion = { ...fixtureQuestionSet, version: fixtureQuestionSet.version + 1 };
+    expect(attemptStorageKey(nextVersion)).not.toBe(attemptStorageKey(fixtureQuestionSet));
+  });
+
   it("restores compatible state with the original deadline", () => {
     const attempt = createAttempt(fixtureQuestionSet, 1_000);
     const storage = memoryStorage(JSON.stringify(attempt));
@@ -116,17 +127,38 @@ describe("attempt persistence", () => {
     };
     expect(loadAttempt(fixtureQuestionSet, storage)).toBeNull();
   });
+
+  it("migrates a compatible legacy attempt to its set-specific key", () => {
+    const attempt = createAttempt(fixtureQuestionSet, 1_000);
+    const storage = memoryStorage(JSON.stringify(attempt), legacyAttemptStorageKey);
+    loadAttempt(fixtureQuestionSet, storage);
+    expect([
+      storage.getItem(attemptStorageKey(fixtureQuestionSet)),
+      storage.getItem(legacyAttemptStorageKey),
+    ]).toEqual([JSON.stringify(attempt), null]);
+  });
+
+  it("preserves a legacy attempt when another set loads", () => {
+    const attempt = createAttempt(fixtureQuestionSet, 1_000);
+    const otherSet = { ...fixtureQuestionSet, id: "other-set" };
+    const stored = JSON.stringify(attempt);
+    const storage = memoryStorage(stored, legacyAttemptStorageKey);
+    expect({
+      loaded: loadAttempt(otherSet, storage),
+      legacy: storage.getItem(legacyAttemptStorageKey),
+    }).toEqual({ loaded: null, legacy: stored });
+  });
 });
 
-function memoryStorage(initialValue: string | null = null) {
-  let value = initialValue;
+function memoryStorage(
+  initialValue: string | null = null,
+  initialKey = attemptStorageKey(fixtureQuestionSet),
+) {
+  const values = new Map<string, string>();
+  if (initialValue) values.set(initialKey, initialValue);
   return {
-    getItem: (key: string) => key === attemptStorageKey ? value : null,
-    setItem: (key: string, nextValue: string) => {
-      if (key === attemptStorageKey) value = nextValue;
-    },
-    removeItem: (key: string) => {
-      if (key === attemptStorageKey) value = null;
-    },
+    getItem: (key: string) => values.get(key) ?? null,
+    setItem: (key: string, value: string) => values.set(key, value),
+    removeItem: (key: string) => values.delete(key),
   };
 }

@@ -1,6 +1,6 @@
 import type { ChoiceId, ExamSection, Question, QuestionSet } from "./questions";
 
-export const attemptStorageKey = "pde-practice-attempt-v1";
+export const legacyAttemptStorageKey = "pde-practice-attempt-v1";
 const attemptSchemaVersion = 1;
 type AttemptStorage = Pick<Storage, "getItem" | "setItem" | "removeItem">;
 
@@ -27,6 +27,10 @@ export interface CompletedAttempt extends AttemptBase {
 }
 
 export type Attempt = InProgressAttempt | CompletedAttempt;
+
+export function attemptStorageKey(set: Pick<QuestionSet, "id" | "version">): string {
+  return `pde-practice-attempt:${set.id}:v${set.version}`;
+}
 
 export interface Score {
   readonly correct: number;
@@ -107,31 +111,65 @@ function percentage(correct: number, total: number): number {
 
 export function saveAttempt(attempt: Attempt, storage: AttemptStorage = localStorage): void {
   try {
-    storage.setItem(attemptStorageKey, JSON.stringify(attempt));
+    storage.setItem(attemptStorageKey({ id: attempt.setId, version: attempt.setVersion }), JSON.stringify(attempt));
   } catch {
     // The attempt remains usable in memory when browser storage is unavailable.
   }
 }
 
-export function clearAttempt(storage: AttemptStorage = localStorage): void {
+export function clearAttempt(set: QuestionSet, storage: AttemptStorage = localStorage): void {
   try {
-    storage.removeItem(attemptStorageKey);
+    storage.removeItem(attemptStorageKey(set));
   } catch {
     // Storage may be blocked by browser policy.
   }
 }
 
 export function loadAttempt(set: QuestionSet, storage: AttemptStorage = localStorage): Attempt | null {
+  const key = attemptStorageKey(set);
   try {
-    const stored = storage.getItem(attemptStorageKey);
-    if (!stored) return null;
-    const value: unknown = JSON.parse(stored);
-    if (!isCompatibleAttempt(value, set)) throw new Error("Incompatible attempt");
-    return value;
+    const stored = storage.getItem(key);
+    if (!stored) return migrateLegacyAttempt(set, storage);
+    return parseAttempt(stored, set);
   } catch {
-    clearAttempt(storage);
+    clearAttempt(set, storage);
     return null;
   }
+}
+
+function migrateLegacyAttempt(set: QuestionSet, storage: AttemptStorage): Attempt | null {
+  try {
+    const stored = storage.getItem(legacyAttemptStorageKey);
+    if (!stored) return null;
+    const value: unknown = JSON.parse(stored);
+    if (hasDifferentSetId(value, set)) return null;
+    if (!isCompatibleAttempt(value, set)) throw new Error("Incompatible attempt");
+    const attempt = value;
+    try {
+      storage.setItem(attemptStorageKey(set), stored);
+      storage.removeItem(legacyAttemptStorageKey);
+    } catch {
+      // A compatible attempt remains usable in memory when migration cannot persist.
+    }
+    return attempt;
+  } catch {
+    try {
+      storage.removeItem(legacyAttemptStorageKey);
+    } catch {
+      // Storage may be blocked by browser policy.
+    }
+    return null;
+  }
+}
+
+function hasDifferentSetId(value: unknown, set: QuestionSet): boolean {
+  return Boolean(value && typeof value === "object" && "setId" in value && value.setId !== set.id);
+}
+
+function parseAttempt(stored: string, set: QuestionSet): Attempt {
+  const value: unknown = JSON.parse(stored);
+  if (!isCompatibleAttempt(value, set)) throw new Error("Incompatible attempt");
+  return value;
 }
 
 function isCompatibleAttempt(value: unknown, set: QuestionSet): value is Attempt {

@@ -297,20 +297,6 @@ export function createRejectionRecord(
   };
 }
 
-export function activateQuestionSet(questionSet: QuestionSet, reviewDocument: string | undefined): QuestionSet {
-  const errors = validateQuestionSet(questionSet);
-  if (!reviewDocument) errors.push("Question set requires an indexed review document.");
-  else {
-    try {
-      errors.push(...validateReviewRecord(questionSet, parseReviewRecord(reviewDocument)));
-    } catch (error) {
-      errors.push(error instanceof Error ? error.message : "Question-set review could not be parsed.");
-    }
-  }
-  if (errors.length > 0) throw new Error(`Question-set activation failed:\n${errors.join("\n")}`);
-  return questionSet;
-}
-
 function validateQuestionSetMetadata(set: Pick<QuestionSet, "id" | "version" | "title">): string[] {
   const errors: string[] = [];
   if (!set.id.trim()) errors.push("Question set ID cannot be empty.");
@@ -386,7 +372,7 @@ export function validateReviewRecord(set: QuestionSet, review: ReviewRecord): st
   ) {
     errors.push("Review record must accept every question exactly once.");
   }
-  if (review.rejectedQuestions.length > 0) errors.push("A review with rejected questions cannot activate a set.");
+  if (review.rejectedQuestions.length > 0) errors.push("An acceptance record cannot contain rejected questions.");
 
   return errors;
 }
