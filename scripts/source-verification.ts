@@ -9,6 +9,7 @@ interface SourceResponse {
 export type SourceFetcher = (url: string) => Promise<SourceResponse>;
 
 export const maxConcurrentSourceRequests = 4;
+export const maxSourceFetchAttempts = 3;
 
 export function collectEvidenceUrls(
   drafts: readonly DraftQuestionSet[],
@@ -33,7 +34,7 @@ export async function findSourceFailures(urls: readonly string[], fetchSource: S
     const batchResults = await Promise.all(
       batch.map(async (url) => {
       try {
-        const response = await fetchSource(url);
+        const response = await fetchSourceWithRetry(url, fetchSource);
         if (!response.ok) return `${url}: HTTP ${response.status}`;
         return isGoogleOwnedSourceUrl(response.url) ? null : `${url}: redirected to non-Google source ${response.url}`;
       } catch (error) {
@@ -44,4 +45,17 @@ export async function findSourceFailures(urls: readonly string[], fetchSource: S
     results.push(...batchResults);
   }
   return results.filter((result): result is string => result !== null);
+}
+
+async function fetchSourceWithRetry(url: string, fetchSource: SourceFetcher): Promise<SourceResponse> {
+  let response = await fetchSource(url);
+  for (let attempt = 1; attempt < maxSourceFetchAttempts && isTransientStatus(response.status); attempt += 1) {
+    await new Promise((resolve) => setTimeout(resolve, attempt * 1_000));
+    response = await fetchSource(url);
+  }
+  return response;
+}
+
+function isTransientStatus(status: number): boolean {
+  return status === 408 || status === 429 || status >= 500;
 }

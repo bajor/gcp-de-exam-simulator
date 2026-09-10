@@ -13,10 +13,10 @@ import { fixtureCatalog, fixtureQuestionSet } from "./test/fixtures";
 
 beforeEach(() => localStorage.clear());
 
-it("shows the second practice exam as available", () => {
+it("shows all published practice exams as available", () => {
   render(<App />);
-  expect(screen.getByRole("heading", { name: "Professional Data Engineer Practice Exam 2" })).toBeVisible();
-  expect(screen.getAllByText("Available")).toHaveLength(2);
+  expect(screen.getByRole("heading", { name: "Professional Data Engineer Practice Exam 3" })).toBeVisible();
+  expect(screen.getAllByText("Available")).toHaveLength(3);
 });
 
 it("opens the second practice exam", async () => {

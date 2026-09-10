@@ -2,9 +2,9 @@
 type: BDR
 title: Exam catalog and automated publication
 description: Observable set selection, unavailable-set handling, content auditing, and automatic deployment behavior.
-status: Accepted
+status: Superseded
 supersedes: 0003
-superseded_by:
+superseded_by: 0005
 tags: [questions, catalog, deployment]
 timestamp: 2026-09-09T00:00:00Z
 ---

@@ -1,0 +1,352 @@
+import type { QuestionSection } from "../../../../domain/questions";
+
+export const analyzeSection = {
+  section: "analyze",
+  author: "set3-analyze-author",
+  questions: [
+    {
+      id: "pde-v42-p3-analyze-01",
+      kind: "single",
+      section: "analyze",
+      objective: "4.1 Preparing data for visualization: optimizing queries for dashboard consumption",
+      prompt: "A parts-support dashboard lets agents find warranty claims by an exact part code embedded in a long, unstructured notes column. It must use token-based text matching, not semantic similarity, and the table contains billions of notes. Which BigQuery design best accelerates the required dashboard query?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "search-index",
+          title: "Introduction to search in BigQuery",
+          url: "https://cloud.google.com/bigquery/docs/search-intro",
+          claim: "BigQuery search indexes support efficient text search using the SEARCH function and are intended for token-based text matching.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Create a search index on the notes column and query it with SEARCH for the part code.",
+          feedback: "A search index with SEARCH is the documented BigQuery solution for the required token-based text lookup at scale.",
+          evidenceIds: ["search-index"],
+        },
+        {
+          id: "b",
+          text: "Generate embeddings for every note and use VECTOR_SEARCH for the part code.",
+          feedback: "Vector search is for similarity search over embeddings, while the requirement explicitly calls for an exact token-based lookup.",
+          evidenceIds: ["search-index"],
+        },
+        {
+          id: "c",
+          text: "Run a full-table regular expression scan of the notes column for every dashboard request.",
+          feedback: "A full-table scan does not use the documented search-index acceleration available for SEARCH queries.",
+          evidenceIds: ["search-index"],
+        },
+        {
+          id: "d",
+          text: "Store the notes in a logical view and filter the view with LIKE.",
+          feedback: "A logical view does not create the text-search index required to accelerate the dashboard's token matching.",
+          evidenceIds: ["search-index"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-02",
+      kind: "single",
+      section: "analyze",
+      objective: "4.1 Preparing data for visualization: creating and maintaining data transformations for reporting",
+      prompt: "A telemetry report requires one row for every device and five-minute interval. Source readings occasionally omit intervals. For missing intervals, the report must carry forward the last observed temperature for that device without maintaining a calendar table or custom join logic. Which BigQuery transformation should the team use?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "gap-fill",
+          title: "Time series functions",
+          url: "https://cloud.google.com/bigquery/docs/reference/standard-sql/time-series-functions#gap_fill",
+          claim: "The GAP_FILL table-valued function adds missing rows in a time series and supports the locf method to carry the last observed value forward.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Use GAP_FILL with the device as the partitioning column, a five-minute bucket width, and locf for temperature.",
+          feedback: "GAP_FILL creates the missing device intervals, and locf supplies the requested last-observation-carried-forward temperature value.",
+          evidenceIds: ["gap-fill"],
+        },
+        {
+          id: "b",
+          text: "Use COUNT(*) grouped by device and five-minute interval.",
+          feedback: "Counting existing rows summarizes received readings but does not create rows for missing intervals or carry a temperature forward.",
+          evidenceIds: ["gap-fill"],
+        },
+        {
+          id: "c",
+          text: "Use a search index on the temperature column.",
+          feedback: "A search index supports text retrieval and does not generate missing time-series rows or apply a carry-forward method.",
+          evidenceIds: ["gap-fill"],
+        },
+        {
+          id: "d",
+          text: "Replace every missing temperature with zero before the report query runs.",
+          feedback: "A zero is not the required last observed value, and replacing values does not generate the absent five-minute intervals.",
+          evidenceIds: ["gap-fill"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-03",
+      kind: "single",
+      section: "analyze",
+      objective: "4.1 Preparing data for visualization: creating and maintaining data transformations for reporting",
+      prompt: "A finance report converts a STRING amount column to NUMERIC. Some newly ingested rows contain nonnumeric values, but the scheduled report must still complete and show those rows with a NULL converted amount for remediation. Which expression should the transformation use?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "safe-cast",
+          title: "Conversion functions",
+          url: "https://cloud.google.com/bigquery/docs/reference/standard-sql/conversion_functions#safe_casting",
+          claim: "SAFE_CAST returns NULL instead of raising an error when a runtime conversion fails.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Use SAFE_CAST(amount AS NUMERIC).",
+          feedback: "SAFE_CAST preserves successful numeric conversions and returns NULL for invalid runtime values, so the report can complete.",
+          evidenceIds: ["safe-cast"],
+        },
+        {
+          id: "b",
+          text: "Use CAST(amount AS NUMERIC).",
+          feedback: "CAST can raise an error for an invalid runtime conversion, contradicting the requirement that the scheduled report finish.",
+          evidenceIds: ["safe-cast"],
+        },
+        {
+          id: "c",
+          text: "Use STRING(amount).",
+          feedback: "Converting the already-string value to STRING does not produce the NUMERIC column required by the report.",
+          evidenceIds: ["safe-cast"],
+        },
+        {
+          id: "d",
+          text: "Use FORMAT('%d', amount).",
+          feedback: "Formatting produces text and does not provide a NULL-on-invalid conversion to the required NUMERIC type.",
+          evidenceIds: ["safe-cast"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-04",
+      kind: "single",
+      section: "analyze",
+      objective: "4.2 Preparing data for AI and ML: preparing data for feature engineering, training and serving machine learning models (e.g., BigQueryML)",
+      prompt: "A streaming service stores explicit 1-to-5 viewer ratings for programs in BigQuery. It needs SQL-based personalized program recommendations for viewers, including viewers who have rated only a small subset of the catalog. Which BigQuery ML approach best meets the requirement?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "matrix-factorization",
+          title: "Recommendation overview",
+          url: "https://cloud.google.com/bigquery/docs/recommendation-overview",
+          claim: "BigQuery ML matrix factorization models generate recommendations from explicit or implicit feedback, and ML.RECOMMEND returns predicted user-item ratings.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Train an explicit-feedback matrix factorization model and use ML.RECOMMEND to return programs for each viewer.",
+          feedback: "Explicit-feedback matrix factorization is designed for the supplied ratings, and ML.RECOMMEND returns the requested personalized user-item recommendations.",
+          evidenceIds: ["matrix-factorization"],
+        },
+        {
+          id: "b",
+          text: "Train a k-means model that assigns every viewer to a behavior cluster.",
+          feedback: "K-means groups similar rows but does not produce the documented user-item recommendations from explicit rating feedback.",
+          evidenceIds: ["matrix-factorization"],
+        },
+        {
+          id: "c",
+          text: "Train an ARIMA_PLUS model for the average rating of each program.",
+          feedback: "Forecasting average ratings over time does not generate personalized recommendations for individual viewers.",
+          evidenceIds: ["matrix-factorization"],
+        },
+        {
+          id: "d",
+          text: "Rank programs only by their global average rating.",
+          feedback: "A global ranking ignores the viewer-specific explicit feedback that matrix factorization uses to personalize recommendations.",
+          evidenceIds: ["matrix-factorization"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-05",
+      kind: "single",
+      section: "analyze",
+      objective: "4.2 Preparing data for AI and ML: preparing data for feature engineering, training and serving machine learning models (e.g., BigQueryML)",
+      prompt: "A retailer has unlabeled BigQuery rows containing annual spend, purchase frequency, and average basket size. Marketing wants to divide customers into groups with similar numeric behavior before designing campaigns. No target label or outcome is available. What should the team create?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "kmeans",
+          title: "Clustering overview",
+          url: "https://cloud.google.com/bigquery/docs/clustering-overview",
+          claim: "BigQuery ML k-means is an unsupervised clustering model that groups rows with similar feature values and can assign cluster IDs with ML.PREDICT.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Create a BigQuery ML k-means model over the three behavior features and use ML.PREDICT for cluster assignments.",
+          feedback: "K-means is the documented unsupervised BigQuery ML approach for grouping unlabeled rows by similar numeric features.",
+          evidenceIds: ["kmeans"],
+        },
+        {
+          id: "b",
+          text: "Create a logistic regression model that predicts a campaign-response label.",
+          feedback: "Logistic regression requires a labeled categorical target, which the scenario explicitly says is unavailable.",
+          evidenceIds: ["kmeans"],
+        },
+        {
+          id: "c",
+          text: "Create an ARIMA_PLUS model that forecasts each customer's next basket size.",
+          feedback: "Forecasting future time-series values does not perform the requested grouping of current unlabeled customer behavior.",
+          evidenceIds: ["kmeans"],
+        },
+        {
+          id: "d",
+          text: "Use ML.RECOMMEND to score products for every customer.",
+          feedback: "Recommendations require user-item feedback and do not assign customers to behavior clusters from the stated features.",
+          evidenceIds: ["kmeans"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-06",
+      kind: "single",
+      section: "analyze",
+      objective: "4.2 Preparing data for AI and ML: preparing data for feature engineering, training and serving machine learning models (e.g., BigQueryML)",
+      prompt: "A loan-pricing team already has a supported BigQuery ML classification model. For each new application, reviewers need the model's prediction and the contribution of each input feature to that individual prediction in one SQL result. Which function should they use?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "explain-predict",
+          title: "The ML.EXPLAIN_PREDICT function",
+          url: "https://cloud.google.com/bigquery/docs/reference/standard-sql/bigqueryml-syntax-explain-predict",
+          claim: "ML.EXPLAIN_PREDICT returns predictions and feature-attribution information for each input row for supported BigQuery ML models.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Call ML.EXPLAIN_PREDICT with the model and the new application rows.",
+          feedback: "ML.EXPLAIN_PREDICT returns both the per-row prediction and feature attributions required by the reviewers.",
+          evidenceIds: ["explain-predict"],
+        },
+        {
+          id: "b",
+          text: "Call ML.PREDICT and infer feature contributions from the predicted label.",
+          feedback: "A prediction alone does not provide the documented per-row feature-attribution output required by the scenario.",
+          evidenceIds: ["explain-predict"],
+        },
+        {
+          id: "c",
+          text: "Call ML.EVALUATE on the new application rows.",
+          feedback: "Evaluation summarizes model performance on labeled data; it does not return the requested explanation for each individual prediction.",
+          evidenceIds: ["explain-predict"],
+        },
+        {
+          id: "d",
+          text: "Export the model and calculate feature attributions in a separately managed service.",
+          feedback: "Exporting adds an unnecessary system because ML.EXPLAIN_PREDICT provides the requested prediction and attribution result in BigQuery SQL.",
+          evidenceIds: ["explain-predict"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-07",
+      kind: "single",
+      section: "analyze",
+      objective: "4.2 Preparing data for AI and ML: preparing data for feature engineering, training and serving machine learning models (e.g., BigQueryML)",
+      prompt: "A facilities team has labeled historical BigQuery rows with building characteristics and the actual monthly electricity use in kilowatt-hours. It needs a SQL-managed model that predicts a numeric electricity-use value for new buildings. Which model type should the team use?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "linear-regression",
+          title: "Regression overview",
+          url: "https://cloud.google.com/bigquery/docs/regression-overview",
+          claim: "BigQuery ML regression models predict continuous numeric values from labeled training data, including linear regression models created with CREATE MODEL.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Create a BigQuery ML linear regression model and score new building rows with ML.PREDICT.",
+          feedback: "Linear regression is the documented BigQuery ML model type for predicting the continuous numeric electricity-use target.",
+          evidenceIds: ["linear-regression"],
+        },
+        {
+          id: "b",
+          text: "Create a logistic regression model that predicts whether use is above the monthly average.",
+          feedback: "That changes the numeric prediction requirement into a binary classification problem and cannot return the required kilowatt-hour value.",
+          evidenceIds: ["linear-regression"],
+        },
+        {
+          id: "c",
+          text: "Create a k-means model that groups buildings by their characteristics.",
+          feedback: "Clustering assigns unlabeled groups rather than learning to predict the stated labeled continuous electricity-use value.",
+          evidenceIds: ["linear-regression"],
+        },
+        {
+          id: "d",
+          text: "Create a matrix factorization model using building ID and month as the two dimensions.",
+          feedback: "Matrix factorization is for recommendations from user-item feedback, not supervised regression on building characteristics.",
+          evidenceIds: ["linear-regression"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+    {
+      id: "pde-v42-p3-analyze-08",
+      kind: "single",
+      section: "analyze",
+      objective: "4.2 Preparing data for AI and ML: preparing data for feature engineering, training and serving machine learning models (e.g., BigQueryML)",
+      prompt: "A team trains a BigQuery ML logistic regression model entirely in BigQuery. It wants BigQuery ML to run multiple training trials and choose hyperparameter values that optimize the model, without writing its own trial orchestration. Which CREATE MODEL option should it configure?",
+      verifiedOn: "2026-09-10",
+      evidence: [
+        {
+          id: "hyperparameter-tuning",
+          title: "Hyperparameter tuning overview",
+          url: "https://cloud.google.com/bigquery/docs/hp-tuning-overview",
+          claim: "BigQuery ML supports automatic hyperparameter tuning for supported model types when NUM_TRIALS is greater than 1, running multiple trials to optimize hyperparameter values.",
+        },
+      ],
+      choices: [
+        {
+          id: "a",
+          text: "Set NUM_TRIALS to a value greater than 1 in CREATE MODEL and specify the hyperparameters to tune.",
+          feedback: "NUM_TRIALS enables BigQuery ML's automatic multiple-trial hyperparameter tuning for supported models, avoiding separate orchestration.",
+          evidenceIds: ["hyperparameter-tuning"],
+        },
+        {
+          id: "b",
+          text: "Set MAX_ITERATIONS to 1 and create a new model manually for every candidate value.",
+          feedback: "Manual model creation is the trial orchestration the requirement excludes; MAX_ITERATIONS alone does not enable automatic tuning trials.",
+          evidenceIds: ["hyperparameter-tuning"],
+        },
+        {
+          id: "c",
+          text: "Use ML.EVALUATE once after training the default model.",
+          feedback: "ML.EVALUATE assesses a trained model but does not run the multiple training trials needed to select hyperparameter values.",
+          evidenceIds: ["hyperparameter-tuning"],
+        },
+        {
+          id: "d",
+          text: "Set AUTO_CLASS_WEIGHTS to TRUE without configuring NUM_TRIALS.",
+          feedback: "Class weighting addresses label imbalance; it does not direct BigQuery ML to run multiple hyperparameter-tuning trials.",
+          evidenceIds: ["hyperparameter-tuning"],
+        },
+      ],
+      correctChoiceId: "a",
+    },
+  ],
+} satisfies QuestionSection<"analyze">;

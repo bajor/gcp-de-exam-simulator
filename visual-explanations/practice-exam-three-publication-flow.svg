@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1040" height="330" viewBox="0 0 1040 330" role="img" aria-labelledby="title description">
+  <title id="title">Practice Exam 3 publication flow</title>
+  <desc id="description">The reviewed v4 candidate is activated in the exam catalog, validated locally and in CI, merged to main, and deployed by GitHub Pages. Transient Google source errors retry before failing verification.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="9" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#355070" />
+    </marker>
+  </defs>
+  <rect width="1040" height="330" fill="#f7fafc" />
+  <text x="40" y="48" font-family="Arial, sans-serif" font-size="25" font-weight="700" fill="#172554">Practice Exam 3 publication flow</text>
+  <text x="40" y="78" font-family="Arial, sans-serif" font-size="15" fill="#334155">Review artifact: all 50 questions are accepted before runtime activation.</text>
+  <g font-family="Arial, sans-serif">
+    <rect x="40" y="132" width="180" height="104" rx="10" fill="#dbeafe" stroke="#2563eb" stroke-width="2" />
+    <text x="130" y="170" text-anchor="middle" font-size="17" font-weight="700" fill="#172554">Accepted v4</text>
+    <text x="130" y="196" text-anchor="middle" font-size="14" fill="#1e3a5f">Question set and</text>
+    <text x="130" y="216" text-anchor="middle" font-size="14" fill="#1e3a5f">SHA-bound review</text>
+    <line x1="220" y1="184" x2="290" y2="184" stroke="#355070" stroke-width="3" marker-end="url(#arrow)" />
+    <rect x="300" y="132" width="180" height="104" rx="10" fill="#dcfce7" stroke="#16a34a" stroke-width="2" />
+    <text x="390" y="170" text-anchor="middle" font-size="17" font-weight="700" fill="#14532d">Exam catalog</text>
+    <text x="390" y="196" text-anchor="middle" font-size="14" fill="#14532d">Practice Exam 3</text>
+    <text x="390" y="216" text-anchor="middle" font-size="14" fill="#14532d">marked available</text>
+    <line x1="480" y1="184" x2="550" y2="184" stroke="#355070" stroke-width="3" marker-end="url(#arrow)" />
+    <rect x="560" y="118" width="200" height="132" rx="10" fill="#fef3c7" stroke="#d97706" stroke-width="2" />
+    <text x="660" y="156" text-anchor="middle" font-size="17" font-weight="700" fill="#78350f">Quality gates</text>
+    <text x="660" y="182" text-anchor="middle" font-size="14" fill="#78350f">make test</text>
+    <text x="660" y="204" text-anchor="middle" font-size="14" fill="#78350f">make verify-sources</text>
+    <text x="660" y="226" text-anchor="middle" font-size="12" fill="#78350f">Retries 408, 429, and 5xx</text>
+    <line x1="760" y1="184" x2="830" y2="184" stroke="#355070" stroke-width="3" marker-end="url(#arrow)" />
+    <rect x="840" y="132" width="160" height="104" rx="10" fill="#ede9fe" stroke="#7c3aed" stroke-width="2" />
+    <text x="920" y="170" text-anchor="middle" font-size="17" font-weight="700" fill="#4c1d95">GitHub Pages</text>
+    <text x="920" y="196" text-anchor="middle" font-size="14" fill="#4c1d95">merge to main</text>
+    <text x="920" y="216" text-anchor="middle" font-size="14" fill="#4c1d95">deploy timeout 30m</text>
+  </g>
+  <text x="40" y="294" font-family="Arial, sans-serif" font-size="13" fill="#475569">This SVG is a PR-only artifact and is deleted from main by the Delete Visual Explanation SVGs workflow.</text>
+</svg>
