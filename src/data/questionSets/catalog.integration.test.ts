@@ -10,6 +10,6 @@ it("keeps the accepted first practice exam content immutable", () => {
   );
 });
 
-it("lists the accepted second practice exam as available", () => {
-  expect(examCatalog[1]?.availability).toBe("available");
+it("lists the accepted second and third practice exams as available", () => {
+  expect(examCatalog.slice(1).map((entry) => entry.availability)).toEqual(["available", "available"]);
 });

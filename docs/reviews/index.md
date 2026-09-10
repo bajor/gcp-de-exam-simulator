@@ -14,3 +14,8 @@ Every real question set receives an independently authored semantic audit. Accep
 - [Practice Exam 2 version 2 independent review rejection](/reviews/professional-data-engineer-v4.2-practice-2-v2-rejected-2026-09-09.md) - Independent review rejected 1 question in candidate version 2.
 - [Practice Exam 2 version 3 independent review rejection](/reviews/professional-data-engineer-v4.2-practice-2-v3-rejected-2026-09-09.md) - Independent review rejected 2 questions in candidate version 3.
 - [Practice Exam 2 version 4 independent review](/reviews/professional-data-engineer-v4.2-practice-2-v4.md) - Accepted all 50 questions in immutable candidate version 4.
+- [Practice Exam 3 version 1 independent review rejection](/reviews/professional-data-engineer-v4.2-practice-3-rejected-2026-09-10.md) - Independent review rejected 2 questions in candidate version 1.
+- [Practice Exam 3 version 2 independent review rejection](/reviews/professional-data-engineer-v4.2-practice-3-v2-rejected-2026-09-10.md) - Independent review rejected 2 questions in candidate version 2.
+- [Practice Exam 3 version 3 independent review rejection](/reviews/professional-data-engineer-v4.2-practice-3-v3-rejected-2026-09-10.md) - Independent review rejected 2 questions in candidate version 3.
+- [Practice Exam 3 version 4 independent review](/reviews/professional-data-engineer-v4.2-practice-3-v4.md) - Accepted all 50 questions in immutable candidate version 4.
+- [Practice Exam 3 version 3 independent review rejection](/reviews/professional-data-engineer-v4.2-practice-3-v3-rejected-2026-09-10.md) - Independent review rejected 2 questions in candidate version 3.

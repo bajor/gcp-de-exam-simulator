@@ -13,7 +13,13 @@ const practiceExamTwo = candidateQuestionSets.find(
 );
 if (!practiceExamTwo) throw new Error("Practice Exam 2 is missing from the candidate registry.");
 
+const practiceExamThree = candidateQuestionSets.find(
+  (questionSet) => questionSet.id === "professional-data-engineer-v4.2-practice-3-v4",
+);
+if (!practiceExamThree) throw new Error("Practice Exam 3 is missing from the candidate registry.");
+
 export const examCatalog = [
   { availability: "available", questionSet: practiceExamOne },
   { availability: "available", questionSet: practiceExamTwo },
+  { availability: "available", questionSet: practiceExamThree },
 ] satisfies readonly ExamCatalogEntry[];

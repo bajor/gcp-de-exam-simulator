@@ -41,6 +41,19 @@ it("reports an unsuccessful source response", async () => {
   expect(failures).toEqual(["https://cloud.google.com/missing: HTTP 404"]);
 });
 
+it("retries a transient source response", async () => {
+  let attempts = 0;
+  const failures = await findSourceFailures(["https://cloud.google.com/transient"], async (url) => {
+    attempts += 1;
+    return attempts === 1
+      ? { ok: false, status: 500, url }
+      : { ok: true, status: 200, url };
+  });
+
+  expect(failures).toEqual([]);
+  expect(attempts).toBe(2);
+});
+
 it("rejects a successful redirect to a non-Google host", async () => {
   const failures = await findSourceFailures(["https://cloud.google.com/redirect"], async () => ({
     ok: true,

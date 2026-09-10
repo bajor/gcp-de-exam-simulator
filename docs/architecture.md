@@ -11,7 +11,7 @@ timestamp: 2026-08-31T00:00:00Z
 
 ## Target Context
 
-The browser loads a static React application from GitHub Pages. The application imports a typed catalog of immutable TypeScript question sets, stores current or completed attempts in browser `localStorage`, and opens cited Google Cloud documentation in external pages. There is no application server or user account. The catalog offers frozen Practice Exam 1 version 6 and accepted Practice Exam 2 version 4.
+The browser loads a static React application from GitHub Pages. The application imports a typed catalog of immutable TypeScript question sets, stores current or completed attempts in browser `localStorage`, and opens cited Google Cloud documentation in external pages. There is no application server or user account. The catalog offers frozen Practice Exam 1 version 6 and accepted Practice Exams 2 version 4 and 3 version 4.
 
 ## Module Ownership
 
@@ -22,6 +22,7 @@ The browser loads a static React application from GitHub Pages. The application 
 | `src/data/questionSets/drafts.ts` | Owns partial question-set manifests used by structural and live-source verification. |
 | `src/data/questionSets/candidates.ts` | Owns complete candidate assembly from registered draft identifiers. |
 | `src/data/questionSets/practice2/` | Owns Set 2 sections, partial draft, and eventual complete candidate without editing Set 1 composition files. |
+| `src/data/questionSets/practice3/` | Owns Set 3 sections, drafts, and versioned candidates without editing prior exam composition files. |
 | `src/data/questionSets/registry.ts` | Aggregates per-exam drafts and candidates for structural, source, and audit verification. |
 | `src/data/questionSets/index.ts` | Owns the runtime catalog of available and coming-soon exam entries. |
 | `docs/reviews/` | Owns independently authored rejection reports and accepted semantic audit records checked by CI. |
@@ -38,10 +39,12 @@ flowchart LR
   Catalog[Typed exam catalog] --> App
   Catalog -->|Available| Set1[Practice Exam 1]
   Catalog -->|Available| Set2[Practice Exam 2]
+  Catalog -->|Available| Set3[Practice Exam 3]
   Skill[Question-authoring skill] --> Section[Complete Set 2 section]
   Section --> Set2Registry[Set 2 draft registry]
   Set1Registry[Frozen Set 1 registries] --> Aggregate[Aggregate verification registry]
   Set2Registry --> Aggregate
+  Set3Registry[Set 3 draft registry] --> Aggregate
   Aggregate --> Verify[Structural and live-source verification]
   Verify --> Candidate[Complete candidate set]
   Candidate --> Review[Independent semantic review]
@@ -57,7 +60,7 @@ flowchart LR
   Components --> Sources[Google Cloud documentation]
 ```
 
-The authoring skill produces one final-count section at a time under a set-specific module tree and registers it in that set's partial draft manifest. `src/data/questionSets/registry.ts` combines the frozen Set 1 registries with Set 2 for quality tooling only. `make verify-sources` validates every registered section, fetches every unique evidence URL with at most four concurrent requests, and binds indexed audit records to exact registered candidates. A failed review creates an indexed rejection report and returns the affected IDs to an independent author. The rejected candidate remains immutable and registered; corrections use a new candidate ID. CI permits a runtime catalog entry only when its exact acceptance exists and no exact rejection exists, without importing Markdown into the browser bundle. Practice Exam 1 has an additional fixed SHA-256 test that blocks any future drift. `App.tsx` joins catalog selection, domain behavior, and screen components. Domain persistence is the only mutable storage boundary. Result links open Google Cloud source evidence outside the application.
+The authoring skill produces one final-count section at a time under a set-specific module tree and registers it in that set's partial draft manifest. `src/data/questionSets/registry.ts` combines the frozen Set 1, Set 2, and Set 3 registries for quality tooling only. `make verify-sources` validates every registered section, fetches every unique evidence URL with at most four concurrent requests, retries transient failures up to three times, and binds indexed audit records to exact registered candidates. A failed review creates an indexed rejection report and returns the affected IDs to an independent author. The rejected candidate remains immutable and registered; corrections use a new candidate ID. CI permits a runtime catalog entry only when its exact acceptance exists and no exact rejection exists, without importing Markdown into the browser bundle. Practice Exam 1 has an additional fixed SHA-256 test that blocks any future drift. `App.tsx` joins catalog selection, domain behavior, and screen components. Domain persistence is the only mutable storage boundary. Result links open Google Cloud source evidence outside the application.
 
 ## Set 2 Registry Review Artifact
 
