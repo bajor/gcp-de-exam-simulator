@@ -9,3 +9,7 @@ it("keeps the accepted first practice exam content immutable", () => {
     "dcda3df67f3a2c70bc824a4c83f9ffa1444c7052606bbfa9ccaa5a66b42aefb6",
   );
 });
+
+it("lists the accepted second practice exam as available", () => {
+  expect(examCatalog[1]?.availability).toBe("available");
+});

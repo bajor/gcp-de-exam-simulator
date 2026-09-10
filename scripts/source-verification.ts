@@ -8,6 +8,8 @@ interface SourceResponse {
 
 export type SourceFetcher = (url: string) => Promise<SourceResponse>;
 
+export const maxConcurrentSourceRequests = 4;
+
 export function collectEvidenceUrls(
   drafts: readonly DraftQuestionSet[],
   candidates: readonly QuestionSet[],
@@ -25,8 +27,11 @@ export function collectEvidenceUrls(
 }
 
 export async function findSourceFailures(urls: readonly string[], fetchSource: SourceFetcher): Promise<string[]> {
-  const results = await Promise.all(
-    urls.map(async (url) => {
+  const results: (string | null)[] = [];
+  for (let start = 0; start < urls.length; start += maxConcurrentSourceRequests) {
+    const batch = urls.slice(start, start + maxConcurrentSourceRequests);
+    const batchResults = await Promise.all(
+      batch.map(async (url) => {
       try {
         const response = await fetchSource(url);
         if (!response.ok) return `${url}: HTTP ${response.status}`;
@@ -34,7 +39,9 @@ export async function findSourceFailures(urls: readonly string[], fetchSource: S
       } catch (error) {
         return `${url}: ${error instanceof Error ? error.message : "request failed"}`;
       }
-    }),
-  );
+      }),
+    );
+    results.push(...batchResults);
+  }
   return results.filter((result): result is string => result !== null);
 }

@@ -8,6 +8,6 @@ export default defineConfig({
       "scripts/create-review-record.integration.test.ts",
       "src/data/questionSets/catalog.integration.test.ts",
     ],
-    testTimeout: 120_000,
+    testTimeout: 180_000,
   },
 });

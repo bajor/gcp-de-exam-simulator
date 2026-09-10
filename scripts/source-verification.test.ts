@@ -1,7 +1,11 @@
 import { expect, it } from "vitest";
 import { fixtureQuestionSet, singleQuestion } from "../src/test/fixtures";
 import type { DraftQuestionSet, QuestionSection } from "../src/domain/questions";
-import { collectEvidenceUrls, findSourceFailures } from "./source-verification";
+import {
+  collectEvidenceUrls,
+  findSourceFailures,
+  maxConcurrentSourceRequests,
+} from "./source-verification";
 
 const draft: DraftQuestionSet = {
   id: "draft",
@@ -46,4 +50,22 @@ it("rejects a successful redirect to a non-Google host", async () => {
   expect(failures).toEqual([
     "https://cloud.google.com/redirect: redirected to non-Google source https://example.com/content",
   ]);
+});
+
+it("limits concurrent source requests", async () => {
+  let activeRequests = 0;
+  let peakRequests = 0;
+  const urls = Array.from({ length: maxConcurrentSourceRequests + 1 }, (_, index) =>
+    `https://cloud.google.com/source-${index}`
+  );
+
+  await findSourceFailures(urls, async (url) => {
+    activeRequests += 1;
+    peakRequests = Math.max(peakRequests, activeRequests);
+    await new Promise((resolve) => setTimeout(resolve, 1));
+    activeRequests -= 1;
+    return { ok: true, status: 200, url };
+  });
+
+  expect(peakRequests).toBe(maxConcurrentSourceRequests);
 });

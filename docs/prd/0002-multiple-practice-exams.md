@@ -2,9 +2,9 @@
 type: PRD
 title: Multiple practice exams
 description: Let candidates choose an available practice exam while showing future sets without fake questions.
-status: Accepted
+status: Superseded
 supersedes: 0001
-superseded_by:
+superseded_by: 0003
 tags: [exam, catalog]
 timestamp: 2026-09-09T00:00:00Z
 ---

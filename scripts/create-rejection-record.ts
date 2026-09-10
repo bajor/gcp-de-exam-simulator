@@ -1,4 +1,4 @@
-import { candidateQuestionSets } from "../src/data/questionSets/candidates";
+import { candidateQuestionSets } from "../src/data/questionSets/registry";
 import {
   createRejectionRecord,
   type RejectedQuestion,
